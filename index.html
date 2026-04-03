@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>我是多多呀</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            user-select: none;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            position: fixed;
+            top: 0;
+            left: 0;
+        }
+
+        body {
+            background: linear-gradient(125deg, 
+                #fff0f5, #ffe0f0, #ffc0d0, #ffb8c8, #ffc8d8, #ffe0f0, #fff0f5
+            );
+            background-size: 400% 400%;
+            animation: flowingRiver 12s ease-in-out infinite;
+            font-family: 'Segoe UI', 'Microsoft YaHei', 'PingFang SC', sans-serif;
+        }
+
+        @keyframes flowingRiver {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .message-box {
+            position: fixed;
+            border-radius: 32px;
+            padding: 16px 22px;
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+            cursor: pointer;
+            animation: softRise 0.28s cubic-bezier(0.2, 0.9, 0.3, 1.1);
+            z-index: 1000;
+            white-space: nowrap;
+            font-weight: 540;
+            font-size: 16px;
+            letter-spacing: 0.3px;
+            transition: all 0.12s ease;
+            min-width: 140px;
+            max-width: 250px;
+            text-align: center;
+            border: 1px solid rgba(255, 220, 230, 0.7);
+        }
+
+        .message-box:active {
+            transform: scale(0.96);
+        }
+
+        @keyframes softRise {
+            0% { transform: scale(0.55) translateY(20px); opacity: 0; }
+            70% { transform: scale(1.02) translateY(-2px); }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .message-text {
+            color: #fff5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.06);
+        }
+
+        .message-text span {
+            font-size: 24px;
+        }
+
+        .counter-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(255, 220, 230, 0.94);
+            color: #d46b8a;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-size: 14px;
+            font-weight: 700;
+            z-index: 2000;
+            pointer-events: none;
+        }
+
+        .clear-btn {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(255, 200, 215, 0.96);
+            border: none;
+            padding: 9px 20px;
+            border-radius: 60px;
+            color: #d46b8a;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 2000;
+            transition: all 0.2s ease;
+        }
+        .clear-btn:active {
+            transform: scale(0.95);
+        }
+
+        .fullscreen-btn {
+            position: fixed;
+            top: 16px;
+            right: 16px;
+            background: rgba(255, 210, 225, 0.94);
+            border: none;
+            padding: 7px 18px;
+            border-radius: 50px;
+            color: #d46b8a;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            z-index: 3000;
+            transition: all 0.2s;
+        }
+        .fullscreen-btn:active {
+            transform: scale(0.96);
+        }
+
+        .tip {
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            background: rgba(255, 225, 235, 0.94);
+            color: #d46b8a;
+            padding: 6px 16px;
+            border-radius: 40px;
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 3000;
+            pointer-events: none;
+        }
+
+        @media (max-width: 600px) {
+            .message-box {
+                padding: 14px 18px;
+                font-size: 14px;
+                min-width: 130px;
+                max-width: 210px;
+            }
+            .message-text span {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="tip">🌸 点击一下弹窗就消失啦</div>
+<button class="fullscreen-btn" id="fullscreenBtn">✨ 全屏沉浸</button>
+<button class="clear-btn" id="clearBtn">🍃 清空所有</button>
+<div class="counter-panel" id="counter">💗 已有 0 个弹窗</div>
+
+<script>
+    const messages = [
+        "你值得被世界温柔对待 🌸", "今天过得开心嘛 💕", "要记得好好吃饭哦 🍚", "你的存在本身就是礼物 🎁",
+        "慢慢来，会好的 🍃", "你比想象中更勇敢 🦋", "今天也要开心呀 😊", "辛苦了，抱抱你 🫂",
+        "你是独一无二的 💎", "别怕，我在 🤝", "你的笑容很治愈 🌻", "今天有好事发生 🍀",
+        "你被爱着，你知道吗 💌", "累了就歇一歇 🛋️", "抬头看看天，很美 🌤️", "你很重要，真的 💖",
+        "明天会更好 🌈", "你是光本身 ✨", "烦恼会过去的 ☁️", "你值得所有美好 🎀"
+    ];
+
+    let activeMessages = 0;
+    let intervalId = null;
+    const counter = document.getElementById('counter');
+    const clearBtn = document.getElementById('clearBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+
+    // 更新计数
+    function updateCounter() {
+        counter.textContent = `💗 已有 ${activeMessages} 个弹窗`;
+    }
+
+    // 安全随机位置（永远不会超出屏幕）
+    function getSafePosition() {
+        const w = window.innerWidth;
+        const h = window.innerHeight;
+        const boxW = 220;
+        const boxH = 60;
+        
+        const left = Math.random() * (w - boxW - 20) + 10;
+        const top = Math.random() * (h - boxH - 100) + 50;
+        
+        return { left, top };
+    }
+
+    // 甜美粉色
+    function getSweetPink() {
+        const colors = [
+            '#ff9ebbdc', '#ff99c9', '#ffabce', '#ffbcdf',
+            '#f8bbd0', '#f48fb1', '#f06292', '#ec407a'
+        ];
+        return colors[Math.floor(Math.random() * colors.length)];
+    }
+
+    const emojis = ['🌸', '💗', '💖', '🎀', '💕', '💓', '🌷', '🩷'];
+
+    // 创建弹窗
+    function createMessage() {
+        const msg = messages[Math.floor(Math.random() * messages.length)];
+        const emoji = emojis[Math.floor(Math.random() * emojis.length)];
+        const { left, top } = getSafePosition();
+        
+        const box = document.createElement('div');
+        box.className = 'message-box';
+        box.style.left = left + 'px';
+        box.style.top = top + 'px';
+        box.style.backgroundColor = getSweetPink();
+        
+        box.innerHTML = `
+            <div class="message-text">
+                <span>${emoji}</span>${msg}
+            </div>
+        `;
+        
+        // 点击删除
+        box.onclick = (e) => {
+            e.stopPropagation();
+            box.remove();
+            activeMessages--;
+            updateCounter();
+        };
+        
+        document.body.appendChild(box);
+        activeMessages++;
+        updateCounter();
+    }
+
+    // 清空所有
+    function clearAll() {
+        document.querySelectorAll('.message-box').forEach(el => el.remove());
+        activeMessages = 0;
+        updateCounter();
+    }
+
+    // 全屏
+    function fullScreen() {
+        const doc = document.documentElement;
+        if (doc.requestFullscreen) doc.requestFullscreen();
+        else if (doc.webkitRequestFullscreen) doc.webkitRequestFullscreen();
+    }
+
+    // 绑定事件
+    clearBtn.onclick = clearAll;
+    fullscreenBtn.onclick = fullScreen;
+
+    // 自动生成弹窗
+    function autoStart() {
+        if (intervalId) clearInterval(intervalId);
+        intervalId = setInterval(createMessage, 360);
+    }
+
+    autoStart();
+
+    // 窗口适配
+    window.addEventListener('resize', () => {
+        document.querySelectorAll('.message-box').forEach(box => {
+            const pos = getSafePosition();
+            box.style.left = pos.left + 'px';
+            box.style.top = pos.top + 'px';
+        });
+    });
+</script>
+</body>
+</html>
